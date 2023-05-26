@@ -1,0 +1,13 @@
+{
+  "routeName": "routeName",
+  "date": "2023-02-03",
+  "passengers": [
+    {
+      "number": 1,
+      "name": "Anakin",
+      "surname": "Skywalker",
+      "ageGroup": "ADULT",
+      "luggageItems": 2
+    }
+  ]
+}

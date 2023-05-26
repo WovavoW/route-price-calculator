@@ -1,0 +1,18 @@
+# clients
+vat-rate:
+  service:
+    url: http://localhost:8081
+base-price:
+  service:
+    url: http://localhost:8082
+
+# app specific properties
+price:
+  config:
+    childFraction: 0.5
+    luggageFraction: 0.3
+
+# spring properties
+spring:
+  profiles:
+    active: stub

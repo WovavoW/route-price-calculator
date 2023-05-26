@@ -1,0 +1,7 @@
+# clients
+vat-rate:
+  service:
+    url: http://localhost:9561
+base-price:
+  service:
+    url: http://localhost:9561

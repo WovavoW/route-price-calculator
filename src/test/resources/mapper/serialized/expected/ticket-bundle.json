@@ -1,0 +1,21 @@
+{
+  "routeName": "route-name",
+  "tickets": [
+    {
+      "passenger": {
+        "number": 1,
+        "name": "Luke",
+        "surname": "Skywalker",
+        "ageGroup": "ADULT",
+        "luggageItems": 2
+      },
+      "price": {
+        "vat": 21.0,
+        "basePriceIncludingVat": 30.55,
+        "luggagePriceIncludingVat": 9.17,
+        "totalPriceIncludingVat": 39.72
+      }
+    }
+  ],
+  "totalPrice": 39.72
+}

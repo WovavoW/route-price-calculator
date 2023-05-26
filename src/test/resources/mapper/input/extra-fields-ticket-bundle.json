@@ -1,0 +1,26 @@
+{
+  "routeName": "route-name",
+  "date": "2023-02-03",
+  "tickets": [
+    {
+      "id": 243556,
+      "passenger": {
+        "number": 1,
+        "name": "Luke",
+        "surname": "Skywalker",
+        "ageGroup": "ADULT",
+        "luggageItems": 2,
+        "ticketType": "ROUND_TRIP"
+      },
+      "price": {
+        "vat": 21.00,
+        "basePriceIncludingVat": 30.55,
+        "luggagePriceIncludingVat": 9.17,
+        "totalPriceIncludingVat": 39.72,
+        "extrServicesPrice": 0.00
+      }
+    }
+  ],
+  "totalPrice": 39.72,
+  "type": "STANDARD"
+}

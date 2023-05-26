@@ -1,0 +1,12 @@
+{
+  "routeName": "route-name",
+  "passengers": [
+    {
+      "number": 1,
+      "name": "Anakin",
+      "surname": "Skywalker",
+      "ageGroup": "ADULT",
+      "luggageItems": 2
+    }
+  ]
+}

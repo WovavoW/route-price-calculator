@@ -1,0 +1,15 @@
+{
+  "routeName": "route-name",
+  "date": "2023-02-03",
+  "routeId": 12566776,
+  "passengers": [
+    {
+      "number": 1,
+      "name": "Luke",
+      "surname": "Skywalker",
+      "ageGroup": "ADULT",
+      "luggageItems": 2,
+      "ticketType": "ROUND_TRIP"
+    }
+  ]
+}

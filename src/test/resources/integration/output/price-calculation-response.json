@@ -1,0 +1,36 @@
+{
+  "routeName": "valid-route",
+  "tickets": [
+    {
+      "passenger": {
+        "number": 1,
+        "name": "Anakin",
+        "surname": "Skywalker",
+        "ageGroup": "ADULT",
+        "luggageItems": 2
+      },
+      "price": {
+        "vat": 21.00,
+        "basePriceIncludingVat": 12.10,
+        "luggagePriceIncludingVat": 7.26,
+        "totalPriceIncludingVat": 19.36
+      }
+    },
+    {
+      "passenger": {
+        "number": 2,
+        "name": "Luke",
+        "surname": "Skywalker",
+        "ageGroup": "CHILD",
+        "luggageItems": 1
+      },
+      "price": {
+        "vat": 21.00,
+        "basePriceIncludingVat": 6.05,
+        "luggagePriceIncludingVat": 3.63,
+        "totalPriceIncludingVat": 9.68
+      }
+    }
+  ],
+  "totalPrice": 29.04
+}

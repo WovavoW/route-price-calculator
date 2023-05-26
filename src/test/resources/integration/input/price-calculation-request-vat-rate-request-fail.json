@@ -1,0 +1,20 @@
+{
+  "routeName": "valid-route",
+  "date": "2023-02-04",
+  "passengers": [
+    {
+      "number": 1,
+      "name": "Anakin",
+      "surname": "Skywalker",
+      "ageGroup": "ADULT",
+      "luggageItems": 2
+    },
+    {
+      "number": 2,
+      "name": "Luke",
+      "surname": "Skywalker",
+      "ageGroup": "CHILD",
+      "luggageItems": 1
+    }
+  ]
+}
