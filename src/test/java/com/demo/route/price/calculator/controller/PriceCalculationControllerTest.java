@@ -9,6 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.verification.VerificationMode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.stream.Stream;
 
+import static com.demo.route.price.calculator.interceptor.ApiVersionInterceptor.ACCEPT_VERSION_HEADER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,6 +29,8 @@ class PriceCalculationControllerTest extends AbstractTest {
     private final TicketBundleResponse response = getTicketBundle();
     @Autowired
     private MockMvc mvc;
+    @Value("${api.version}")
+    private String apiVersion;
     @MockBean
     private PriceCalculationFlowService businessService;
     @MockBean
@@ -62,6 +66,7 @@ class PriceCalculationControllerTest extends AbstractTest {
         // execute and verify
         mvc.perform(MockMvcRequestBuilders.post("/price")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header(ACCEPT_VERSION_HEADER, apiVersion)
                         .content(requestBody))
                 .andExpect(status().is(arguments.responseCode));
 
