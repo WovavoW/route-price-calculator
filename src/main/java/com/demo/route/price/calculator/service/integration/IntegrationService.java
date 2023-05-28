@@ -1,13 +1,9 @@
 package com.demo.route.price.calculator.service.integration;
 
-import com.demo.route.price.calculator.model.response.BasePriceServiceWrappedResponse;
-import com.demo.route.price.calculator.model.response.VatRateServiceWrappedResponse;
-
-import java.time.LocalDate;
+import com.demo.route.price.calculator.model.request.PriceCalculationRequest;
+import com.demo.route.price.calculator.service.data.ExternalData;
 
 public interface IntegrationService {
 
-    VatRateServiceWrappedResponse getVatRate(LocalDate date);
-
-    BasePriceServiceWrappedResponse getBaseRoutePrice(String routeName, LocalDate date);
+    ExternalData asyncObtainPriceCalculationDataFromExternalClients(PriceCalculationRequest request);
 }

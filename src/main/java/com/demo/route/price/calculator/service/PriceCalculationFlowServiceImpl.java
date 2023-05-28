@@ -40,13 +40,9 @@ public class PriceCalculationFlowServiceImpl implements PriceCalculationFlowServ
 
     @Override
     public TicketBundleResponse calculatePrices(PriceCalculationRequest request) {
-        final BigDecimal vatRate = integrationService.getVatRate(request.date()).vatRate();
-        final BigDecimal basePrice = integrationService.getBaseRoutePrice(
-                request.routeName(),
-                request.date()
-        ).basePrice();
+        var data = integrationService.asyncObtainPriceCalculationDataFromExternalClients(request);
 
-        return calculatePrices(request, vatRate, basePrice);
+        return calculatePrices(request, data.vatRate(), data.basePrice());
     }
 
     private TicketBundleResponse calculatePrices(

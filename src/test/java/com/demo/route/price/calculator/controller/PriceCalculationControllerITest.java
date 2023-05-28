@@ -11,6 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.stream.Stream;
 
+import static com.demo.route.price.calculator.interceptor.ApiVersionInterceptor.ACCEPT_VERSION_HEADER;
 import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,16 +29,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class PriceCalculationControllerITest extends AbstractTest {
-
-    @Autowired
-    private MockMvc mvc;
+    private final MockMvc mvc;
+    private final String apiVersion;
     private WireMockServer wireMockServer;
+
+    public PriceCalculationControllerITest(@Autowired MockMvc mvc, @Value("${api.version}") String apiVersion) {
+        this.mvc = mvc;
+        this.apiVersion = apiVersion;
+    }
 
     static Stream<TestArguments> testInput() {
         return Stream.of(
-                new TestArguments("price-calculation-request.json", "price-calculation-response.json", 200),
-                new TestArguments("price-calculation-request-vat-rate-request-fail.json", null, 500),
-                new TestArguments("price-calculation-request-base-price-request-fail.json", null, 500)
+                new TestArguments("price-calculation-request.json", "price-calculation-response.json", 200, true),
+                new TestArguments("price-calculation-request-vat-rate-request-fail.json", null, 500, true),
+                new TestArguments("price-calculation-request-base-price-request-fail.json", null, 500, true),
+                new TestArguments("price-calculation-request.json", null, 400, false)
         );
     }
 
@@ -68,6 +75,7 @@ class PriceCalculationControllerITest extends AbstractTest {
         // execute and verify
         String actualResponse = mvc.perform(MockMvcRequestBuilders.post("/price")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header(ACCEPT_VERSION_HEADER, arguments.correctApiVersion ? apiVersion : "invalid")
                         .content(requestBody))
                 .andExpect(status().is(arguments.responseCode))
                 .andReturn()
@@ -82,7 +90,8 @@ class PriceCalculationControllerITest extends AbstractTest {
     record TestArguments(
             String inputFile,
             String responseFile,
-            int responseCode
+            int responseCode,
+            boolean correctApiVersion
     ) {
 
     }

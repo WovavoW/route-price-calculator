@@ -3,11 +3,10 @@ package com.demo.route.price.calculator.service;
 import com.demo.route.price.calculator.api.PriceCalculationFlowService;
 import com.demo.route.price.calculator.exception.InternalServerException;
 import com.demo.route.price.calculator.model.Ticket;
-import com.demo.route.price.calculator.model.response.BasePriceServiceWrappedResponse;
-import com.demo.route.price.calculator.model.response.VatRateServiceWrappedResponse;
 import com.demo.route.price.calculator.service.builder.TicketBundleBuilderService;
 import com.demo.route.price.calculator.service.builder.TicketsBuilderService;
 import com.demo.route.price.calculator.service.data.CalculatedPrices;
+import com.demo.route.price.calculator.service.data.ExternalData;
 import com.demo.route.price.calculator.service.integration.IntegrationService;
 import com.demo.route.price.calculator.util.AbstractTest;
 import org.junit.jupiter.api.Test;
@@ -27,10 +26,8 @@ import static org.mockito.Mockito.never;
 
 class PriceCalculationFlowServiceImplTest extends AbstractTest {
 
-    private final VatRateServiceWrappedResponse vatRateServiceWrappedResponse = new VatRateServiceWrappedResponse(
-            BigDecimal.valueOf(21)
-    );
-    private final BasePriceServiceWrappedResponse basePriceServiceWrappedResponse = new BasePriceServiceWrappedResponse(
+    private final ExternalData externalData = new ExternalData(
+            BigDecimal.valueOf(21),
             BigDecimal.valueOf(10)
     );
     private final PriceCalculationFlowService priceCalculationFlowService;
@@ -63,14 +60,12 @@ class PriceCalculationFlowServiceImplTest extends AbstractTest {
         );
         final var calculatedPrices = getCalculatedPrices();
         final var calculatedPricesCaptor = ArgumentCaptor.forClass(CalculatedPrices.class);
-        Mockito.when(integrationService.getVatRate(request.date()))
-                .thenReturn(vatRateServiceWrappedResponse);
-        Mockito.when(integrationService.getBaseRoutePrice(request.routeName(), request.date()))
-                .thenReturn(basePriceServiceWrappedResponse);
+        Mockito.when(integrationService.asyncObtainPriceCalculationDataFromExternalClients(request))
+                .thenReturn(externalData);
         Mockito.when(basePricesCalculationService
                 .getBaseCalculatedPrices(
-                        vatRateServiceWrappedResponse.vatRate(),
-                        basePriceServiceWrappedResponse.basePrice()
+                        externalData.vatRate(),
+                        externalData.basePrice()
                 )
         ).thenReturn(calculatedPrices);
         Mockito.when(ticketsBuilderService.buildTicketsForPassengers(eq(request.passengers()), any()))
@@ -80,11 +75,10 @@ class PriceCalculationFlowServiceImplTest extends AbstractTest {
         priceCalculationFlowService.calculatePrices(request);
 
         //verify
-        Mockito.verify(integrationService).getVatRate(request.date());
-        Mockito.verify(integrationService).getBaseRoutePrice(request.routeName(), request.date());
+        Mockito.verify(integrationService).asyncObtainPriceCalculationDataFromExternalClients(request);
         Mockito.verify(basePricesCalculationService).getBaseCalculatedPrices(
-                vatRateServiceWrappedResponse.vatRate(),
-                basePriceServiceWrappedResponse.basePrice()
+                externalData.vatRate(),
+                externalData.basePrice()
         );
         Mockito.verify(ticketsBuilderService).buildTicketsForPassengers(eq(request.passengers()), calculatedPricesCaptor.capture());
         Mockito.verify(ticketBundleBuilderService).buildTicketBundleResponse(request.routeName(), tickets);
@@ -100,25 +94,22 @@ class PriceCalculationFlowServiceImplTest extends AbstractTest {
     void failedCalculationFlow() {
         // set-up
         final var request = getPriceCalculationRequest();
-        Mockito.when(integrationService.getVatRate(request.date()))
-                .thenReturn(vatRateServiceWrappedResponse);
-        Mockito.when(integrationService.getBaseRoutePrice(request.routeName(), request.date()))
-                .thenReturn(basePriceServiceWrappedResponse);
+        Mockito.when(integrationService.asyncObtainPriceCalculationDataFromExternalClients(request))
+                .thenReturn(externalData);
         Mockito.when(basePricesCalculationService
                 .getBaseCalculatedPrices(
-                        vatRateServiceWrappedResponse.vatRate(),
-                        basePriceServiceWrappedResponse.basePrice()
+                        externalData.vatRate(),
+                        externalData.basePrice()
                 )
         ).thenThrow(new RuntimeException());
 
         // execute and verify
         assertThrows(InternalServerException.class, () -> priceCalculationFlowService.calculatePrices(request));
 
-        Mockito.verify(integrationService).getVatRate(request.date());
-        Mockito.verify(integrationService).getBaseRoutePrice(request.routeName(), request.date());
+        Mockito.verify(integrationService).asyncObtainPriceCalculationDataFromExternalClients(request);
         Mockito.verify(basePricesCalculationService).getBaseCalculatedPrices(
-                vatRateServiceWrappedResponse.vatRate(),
-                basePriceServiceWrappedResponse.basePrice()
+                externalData.vatRate(),
+                externalData.basePrice()
         );
         Mockito.verify(ticketsBuilderService, never()).buildTicketsForPassengers(any(), any());
         Mockito.verify(ticketBundleBuilderService, never()).buildTicketBundleResponse(any(), any());

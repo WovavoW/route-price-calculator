@@ -17,6 +17,8 @@ import java.util.List;
 
 public abstract class AbstractTest {
     protected static final String ROUTE_NAME = "route-name";
+    protected static final BigDecimal TAX_RATE = BigDecimal.valueOf(21);
+    protected static final BigDecimal BASE_PRICE = BigDecimal.valueOf(10);
 
     protected final ObjectMapper objectMapper = new ObjectMapperConfig().objectMapper();
 

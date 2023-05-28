@@ -11,6 +11,8 @@ price:
   config:
     childFraction: 0.5
     luggageFraction: 0.3
+api:
+  version: v1
 
 # spring properties
 spring:
